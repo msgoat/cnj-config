@@ -11,6 +11,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <junit.version>5.3.2</junit.version>
+        <payara.version>5.184</payara.version>
+        <microprofile.version>2.1</microprofile.version>
         <docker.registry.name>docker.at.automotive.msg.team</docker.registry.name>
 		<docker.organization.name>cloudtrain</docker.organization.name>
 		<docker.image.name>${docker.registry.name}/${docker.organization.name}/${project.artifactId}</docker.image.name>
@@ -44,7 +46,7 @@
             <dependency>
                 <groupId>fish.payara.extras</groupId>
                 <artifactId>payara-embedded-all</artifactId>
-                <version>5.184</version>
+                <version>${payara.version}</version>
                 <scope>provided</scope>
             </dependency>
             <!-- Generic JEE 8 runtime dependencies -->
@@ -77,16 +79,25 @@
             <artifactId>javaee-api</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- Miscellaneous 3rd party stuff -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
         <!-- Payara Jakarta EE 8 runtime for testing purposes -->
         <dependency>
             <groupId>fish.payara.extras</groupId>
             <artifactId>payara-embedded-all</artifactId>
             <scope>test</scope>
+        </dependency>
+        <!-- Payara MicroProfile API BOM imports all MicroProfile API's -->
+        <!-- declaring this particular BOM in dependencyManagement section does not work!!! -->
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>${microprofile.version}</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Miscellaneous 3rd party stuff -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
         <!-- Test runtime dependencies -->
         <dependency>
