@@ -9,12 +9,14 @@ version: '3'
 services:
 
   backend:
-    image: hmfwpcnj/cnj-config-backend-spring:latest
+    image: docker.at.automotive.msg.team/cloudtrain/cnj-config-backend-spring:latest
     ports:
       - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: cloud
       CNAP_CLOUD: openshift
+      CLOUDTRAIN_CONFIG_STRINGVALUE: "environmentVariables"
+      CLOUDTRAIN_CONFIG_NUMERICVALUE: "456"
 
 
 

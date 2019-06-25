@@ -55,3 +55,8 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+cloudtrain:
+  config:
+    stringValue: "Spring Boot"
+    numericValue: 456

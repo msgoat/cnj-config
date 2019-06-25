@@ -37,6 +37,11 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: CLOUDTRAIN_CONFIG_STRINGVALUE:
+              value: {{ .Values.cloudtrain.config.stringValue }}
+            - name: CLOUDTRAIN_CONFIG_NUMERICVALUE:
+              value: {{ .Values.cloudtrain.config.numericValue | quote }}
 {{- if .Values.image.pullSecret }}
       imagePullSecrets:
         - name: {{ .Values.image.pullSecret }}

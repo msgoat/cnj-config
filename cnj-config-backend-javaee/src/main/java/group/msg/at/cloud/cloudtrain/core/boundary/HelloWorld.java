@@ -22,6 +22,6 @@ public class HelloWorld {
     private int configNumericValue;
 
     public Message getHelloMessage() {
-        return new Message(UUID.randomUUID(), "hello", String.format("Welcome to Cloud Native Java with Java EE! configStringValue : \"%s\", configNumericValue : %d", this.configStringValue, this.configNumericValue));
+        return new Message(UUID.randomUUID(), "hello", String.format("Welcome to Cloud Native Java with %s! configNumericValue : %d", this.configStringValue, this.configNumericValue));
     }
 }

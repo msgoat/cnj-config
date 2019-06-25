@@ -58,5 +58,5 @@ affinity: {}
 
 cloudtrain:
   config:
-    stringValue: "environmentVariables"
+    stringValue: "JavaEE"
     numericValue: 456

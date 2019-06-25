@@ -55,3 +55,8 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+cloudtrain:
+  config:
+    stringValue: "MicroProfile"
+    numericValue: 456

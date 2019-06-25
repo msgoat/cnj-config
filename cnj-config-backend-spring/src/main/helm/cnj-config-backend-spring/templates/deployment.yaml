@@ -42,6 +42,10 @@ spec:
               value: cloud
             - name: CNAP_CLOUD
               value: kubernetes
+            - name: CLOUDTRAIN_CONFIG_STRINGVALUE:
+              value: {{ .Values.cloudtrain.config.stringValue }}
+            - name: CLOUDTRAIN_CONFIG_NUMERICVALUE:
+              value: {{ .Values.cloudtrain.config.numericValue | quote }}
 {{- if .Values.image.pullSecret }}
       imagePullSecrets:
         - name: {{ .Values.image.pullSecret }}

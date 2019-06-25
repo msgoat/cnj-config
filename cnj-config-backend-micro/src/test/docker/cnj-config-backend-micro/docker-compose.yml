@@ -12,3 +12,6 @@ services:
     image: docker.at.automotive.msg.team/cloudtrain/cnj-config-backend-micro:latest
     ports:
       - "8080:8080"
+    environment:
+      CLOUDTRAIN_CONFIG_STRINGVALUE: "environmentVariables"
+      CLOUDTRAIN_CONFIG_NUMERICVALUE: "456"
