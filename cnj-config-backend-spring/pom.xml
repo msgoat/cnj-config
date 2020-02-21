@@ -10,34 +10,51 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
-        <spring.boot.version>2.1.6.RELEASE</spring.boot.version>
+        <!-- runtime related properties -->
+        <java.version>11</java.version>
+        <spring.boot.version>2.2.4.RELEASE</spring.boot.version>
+        <!-- common logging dependencies -->
+        <slf4j.version>1.7.30</slf4j.version>
+        <log4j.slf4j.version>2.13.0</log4j.slf4j.version>
         <logstash.logback.encoder.version>6.1</logstash.logback.encoder.version>
-        <micrometer.version>1.2.0</micrometer.version>
-        <common.persistence.jpa.version>1.0.2</common.persistence.jpa.version>
+        <!-- common test dependencies -->
+        <junit.version>5.6.0</junit.version>
+        <backend.test.version>3.0.0</backend.test.version>
+        <!-- docker related properties -->
         <docker.registry.name>docker.at.automotive.msg.team</docker.registry.name>
         <docker.organization.name>cloudtrain</docker.organization.name>
         <docker.image.name>${docker.registry.name}/${docker.organization.name}/${project.artifactId}</docker.image.name>
         <docker.removeMode>all</docker.removeMode>
         <docker.cleanup>try</docker.cleanup>
         <docker.verbose>true</docker.verbose>
-        <flyway.version>5.2.4</flyway.version>
-        <keycloak.version>4.8.3.Final</keycloak.version>
-        <postgres.jdbc.version>42.2.5</postgres.jdbc.version>
-        <maven.docker.plugin.version>0.27.2</maven.docker.plugin.version>
-        <maven.compose.plugin.version>1.0.0</maven.compose.plugin.version>
-        <maven.enforcer.plugin.version>3.0.0-M2</maven.enforcer.plugin.version>
+        <!-- kubernetes related properties -->
+        <k8s.cluster.route>https://k8sapps.at.automotive.msg.team</k8s.cluster.route>
+        <k8s.cluster.namespace>default</k8s.cluster.namespace>
+        <k8s.ingress.host></k8s.ingress.host>
+        <k8s.ingress.path>/${k8s.cluster.namespace}/${project.artifactId}</k8s.ingress.path>
+        <k8s.test.target.route>${k8s.cluster.route}${k8s.ingress.path}</k8s.test.target.route>
+        <!-- pinning versions of common maven plugins -->
+        <maven.clean.plugin.version>3.1.0</maven.clean.plugin.version>
+        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
+        <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
+        <maven.deploy.plugin.version>2.8.2</maven.deploy.plugin.version>
+        <maven.enforcer.plugin.version>3.0.0-M3</maven.enforcer.plugin.version>
         <maven.failsafe.plugin.version>2.22.1</maven.failsafe.plugin.version>
-        <maven.surefire.plugin.version>2.22.1</maven.surefire.plugin.version>
-        <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
-        <maven.jar.plugin.version>3.1.1</maven.jar.plugin.version>
+        <maven.flatten.plugin.version>1.2.1</maven.flatten.plugin.version>
+        <maven.install.plugin.version>2.5.2</maven.install.plugin.version>
+        <maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
         <maven.resources.plugin.version>3.1.0</maven.resources.plugin.version>
+        <maven.site.plugin.version>3.8.2</maven.site.plugin.version>
+        <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
+        <maven.surefire.plugin.version>2.22.1</maven.surefire.plugin.version>
+        <!-- pinning versions of application type specific maven plugins -->
         <maven.spring.boot.plugin.version>${spring.boot.version}</maven.spring.boot.plugin.version>
-        <maven.helm.plugin.version>0.9.0</maven.helm.plugin.version>
-        <helm.tillerNamespace>sys-tiller</helm.tillerNamespace>
-        <maven.flatten.plugin.version>1.1.0</maven.flatten.plugin.version>
+        <!-- pinning versions of cloud native specific maven plugins -->
+        <maven.compose.plugin.version>1.0.0</maven.compose.plugin.version>
+        <maven.docker.plugin.version>0.33.0</maven.docker.plugin.version>
+        <maven.helm.plugin.version>2.0.1</maven.helm.plugin.version>
         <!-- new Maven version management -->
-        <revision>2.0.0</revision>
+        <revision>3.0.0</revision>
         <sha1></sha1>
         <changelist></changelist>
     </properties>
@@ -54,50 +71,73 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
+        <!-- =========================== -->
+        <!-- execution time dependencies -->
+        <!-- =========================== -->
+        <!-- common dependencies section -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- Spring Boot Actuator for liveness and readiness probes -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!-- showcase specific section -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <!-- Spring Boot Actuator for monitoring -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
+        <!-- =========================== -->
+        <!-- test time dependencies      -->
+        <!-- =========================== -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.restdocs</groupId>
-            <artifactId>spring-restdocs-mockmvc</artifactId>
+            <groupId>group.msg.at.cloud</groupId>
+            <artifactId>cnj-config-backend-test</artifactId>
+            <version>${backend.test.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>group.msg.at.cloud</groupId>
-            <artifactId>cnj-config-backend-test</artifactId>
-            <version>1.0.0</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
         <pluginManagement>
             <plugins>
+                <!-- common maven plugins section -->
                 <plugin>
-                    <groupId>io.fabric8</groupId>
-                    <artifactId>docker-maven-plugin</artifactId>
-                    <version>${maven.docker.plugin.version}</version>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${maven.clean.plugin.version}</version>
                 </plugin>
-                <!-- Docker Compose Maven plugin to run docker container groups for testing -->
                 <plugin>
-                    <groupId>group.msg.at.cloud.tools</groupId>
-                    <artifactId>compose-maven-plugin</artifactId>
-                    <version>${maven.compose.plugin.version}</version>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.plugin.version}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <parameters>true</parameters>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven.dependency.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven.deploy.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -111,18 +151,8 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${maven.surefire.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven.compiler.plugin.version}</version>
-                    <configuration>
-                        <parameters>true</parameters>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                    </configuration>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${maven.install.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -149,6 +179,22 @@
                     </configuration>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven.site.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surefire.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>${maven.flatten.plugin.version}</version>
+                </plugin>
+                <!-- spring boot specific maven plugins section -->
+                <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${maven.spring.boot.plugin.version}</version>
@@ -164,13 +210,17 @@
                         <mainClass>${start-class}</mainClass>
                     </configuration>
                 </plugin>
-                <!-- Flatten Maven plugin adding support of CI friendly version numbers -->
+                <!-- cloud native specific maven plugins section -->
                 <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>flatten-maven-plugin</artifactId>
-                    <version>${maven.flatten.plugin.version}</version>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>${maven.docker.plugin.version}</version>
                 </plugin>
-                <!-- Helm Maven Plugin to install/delete Helm Charts on Kubernetes -->
+                <plugin>
+                    <groupId>group.msg.at.cloud.tools</groupId>
+                    <artifactId>compose-maven-plugin</artifactId>
+                    <version>${maven.compose.plugin.version}</version>
+                </plugin>
                 <plugin>
                     <groupId>group.msg.at.cloud.tools</groupId>
                     <artifactId>helm-maven-plugin</artifactId>
@@ -191,7 +241,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.5</version>
+                                    <version>[3.5,)</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
                                     <version>${java.version}</version>
@@ -228,8 +278,9 @@
         </plugins>
     </build>
     <profiles>
-        <!-- profile pre-commit-stage representing the local build supposed to be run before committing/pushing to GIT -->
-        <!-- compiles all sources; runs unit tests; builds and tests docker image using system tests -->
+        <!-- profile pre-commit-stage representing pre-commit-stage of local build -->
+        <!-- supposed to be run before each push to the central GIT repository -->
+        <!-- builds application; runs unit tests on application; builds docker image; runs system tests on docker container -->
         <profile>
             <id>pre-commit-stage</id>
             <properties>
@@ -276,6 +327,22 @@
                                     <outputDirectory>${project.build.directory}/docker-resources</outputDirectory>
                                 </configuration>
                             </execution>
+                            <execution>
+                                <id>copy-compose-resources</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.basedir}/src/test/docker/${project.artifactId}</directory>
+                                            <filtering>true</filtering>
+                                        </resource>
+                                    </resources>
+                                    <outputDirectory>${project.build.directory}/compose-resources/${project.artifactId}</outputDirectory>
+                                </configuration>
+                            </execution>
                         </executions>
                     </plugin>
                     <plugin>
@@ -317,7 +384,7 @@
                                 </goals>
                                 <configuration>
                                     <composeFile>
-                                        ${project.basedir}/src/test/docker/${project.artifactId}/docker-compose.yml
+                                        ${project.build.directory}/compose-resources/${project.artifactId}/docker-compose.yml
                                     </composeFile>
                                 </configuration>
                             </execution>
@@ -329,7 +396,7 @@
                                 </goals>
                                 <configuration>
                                     <composeFile>
-                                        ${project.basedir}/src/test/docker/${project.artifactId}/docker-compose.yml
+                                        ${project.build.directory}/compose-resources/${project.artifactId}/docker-compose.yml
                                     </composeFile>
                                 </configuration>
                             </execution>
@@ -346,7 +413,6 @@
                                 </goals>
                                 <phase>integration-test</phase>
                                 <configuration>
-                                    <forkCount>0</forkCount>
                                     <includes>
                                         <include>**/*SystemTest.java</include>
                                     </includes>
@@ -374,15 +440,11 @@
             </build>
         </profile>
         <!-- profile commit-stage representing commit-stage of CI build -->
-        <!-- builds and analyzes all sources; runs unit tests -->
+        <!-- builds application; runs unit tests on application; builds docker image; runs system tests on docker container; pushes docker image  -->
         <profile>
             <id>commit-stage</id>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
@@ -392,59 +454,14 @@
                             </excludes>
                         </configuration>
                     </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <!-- profile dockerize-stage representing dockerize-stage of CI build -->
-        <!-- builds, tests and pushes docker image -->
-        <profile>
-            <id>dockerize-stage</id>
-            <properties>
-                <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
-                <maven.install.skip>true</maven.install.skip>
-            </properties>
-            <build>
-                <plugins>
-                    <!-- skip compilation, since we are working with an already built artifact -->
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <skipMain>true</skipMain>
-                            <skip>true</skip>
-                        </configuration>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
                     </plugin>
-                    <!-- skip unit tests, since we are working with an already built artifact -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </plugin>
-                    <!-- skip JAR packaging, since we are working with an already built artifact -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <skipIfEmpty>true</skipIfEmpty>
-                        </configuration>
-                    </plugin>
-                    <!-- copy resources for docker build applying filtering -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-resources-plugin</artifactId>
                         <executions>
-                            <execution>
-                                <id>default-resources</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>resources</goal>
-                                </goals>
-                                <configuration>
-                                    <skip>true</skip>
-                                </configuration>
-                            </execution>
                             <execution>
                                 <id>copy-docker-resources</id>
                                 <phase>package</phase>
@@ -457,39 +474,34 @@
                                             <directory>${project.basedir}/src/main/docker</directory>
                                             <filtering>true</filtering>
                                         </resource>
+                                        <resource>
+                                            <directory>${project.build.directory}</directory>
+                                            <includes>
+                                                <include>*.jar</include>
+                                            </includes>
+                                        </resource>
                                     </resources>
                                     <outputDirectory>${project.build.directory}/docker-resources</outputDirectory>
                                 </configuration>
                             </execution>
-                        </executions>
-                    </plugin>
-                    <!-- copy previously built artifact for docker build -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <executions>
                             <execution>
-                                <id>download-docker-resources</id>
-                                <phase>package</phase>
+                                <id>copy-compose-resources</id>
+                                <phase>process-resources</phase>
                                 <goals>
-                                    <goal>copy</goal>
+                                    <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>${project.groupId}</groupId>
-                                            <artifactId>${project.artifactId}</artifactId>
-                                            <version>${project.version}</version>
-                                            <type>jar</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>${project.build.directory}/docker-resources</outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.basedir}/src/test/docker/${project.artifactId}</directory>
+                                            <filtering>true</filtering>
+                                        </resource>
+                                    </resources>
+                                    <outputDirectory>${project.build.directory}/compose-resources/${project.artifactId}</outputDirectory>
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
-                    <!-- build and push docker image -->
                     <plugin>
                         <groupId>io.fabric8</groupId>
                         <artifactId>docker-maven-plugin</artifactId>
@@ -536,7 +548,6 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <!-- start docker containers before running tests and stop them after running tests -->
                     <plugin>
                         <groupId>group.msg.at.cloud.tools</groupId>
                         <artifactId>compose-maven-plugin</artifactId>
@@ -549,7 +560,7 @@
                                 </goals>
                                 <configuration>
                                     <composeFile>
-                                        ${project.basedir}/src/test/docker/${project.artifactId}/docker-compose.yml
+                                        ${project.build.directory}/compose-resources/${project.artifactId}/docker-compose.yml
                                     </composeFile>
                                 </configuration>
                             </execution>
@@ -561,13 +572,14 @@
                                 </goals>
                                 <configuration>
                                     <composeFile>
-                                        ${project.basedir}/src/test/docker/${project.artifactId}/docker-compose.yml
+                                        ${project.build.directory}/compose-resources/${project.artifactId}/docker-compose.yml
                                     </composeFile>
+                                    <removeVolumes>true</removeVolumes>
+                                    <removeOrphans>true</removeOrphans>
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
-                    <!-- run all system tests on started docker containers -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
@@ -579,7 +591,6 @@
                                 </goals>
                                 <phase>integration-test</phase>
                                 <configuration>
-                                    <forkCount>0</forkCount>
                                     <includes>
                                         <include>**/*SystemTest.java</include>
                                     </includes>
@@ -611,8 +622,8 @@
         <profile>
             <id>integration-test-stage</id>
             <properties>
-                <test.target.route>http://localhost:30080/${project.artifactId}</test.target.route>
-                <k8s.namespace>int</k8s.namespace>
+                <k8s.cluster.namespace>int</k8s.cluster.namespace>
+                <test.target.route>${k8s.test.target.route}</test.target.route>
                 <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
                 <maven.install.skip>true</maven.install.skip>
             </properties>
@@ -649,13 +660,19 @@
                         <artifactId>maven-resources-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>default-resources</id>
+                                <id>copy-helm-resources</id>
                                 <phase>process-resources</phase>
                                 <goals>
-                                    <goal>resources</goal>
+                                    <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <skip>true</skip>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.basedir}/src/main/helm/${project.artifactId}</directory>
+                                            <filtering>true</filtering>
+                                        </resource>
+                                    </resources>
+                                    <outputDirectory>${project.build.directory}/helm-resources/${project.artifactId}</outputDirectory>
                                 </configuration>
                             </execution>
                         </executions>
@@ -672,21 +689,26 @@
                                     <goal>deploy</goal>
                                 </goals>
                                 <configuration>
-                                    <helmChartDirectory>src/main/helm/${project.artifactId}</helmChartDirectory>
-                                    <helmReleaseName>${project.artifactId}</helmReleaseName>
-                                    <helmReleaseNamespace>int</helmReleaseNamespace>
+                                    <chartDirectory>${project.build.directory}/helm-resources/${project.artifactId}</chartDirectory>
+                                    <releaseName>${project.artifactId}</releaseName>
+                                    <namespace>${k8s.cluster.namespace}</namespace>
+                                    <debug>true</debug>
                                 </configuration>
                             </execution>
-                            <execution>
-                                <id>helm-delete</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>delete</goal>
-                                </goals>
-                                <configuration>
-                                    <helmReleaseName>${project.artifactId}</helmReleaseName>
-                                </configuration>
-                            </execution>
+                            <!--
+                                                        <execution>
+                                                            <id>helm-delete</id>
+                                                            <phase>post-integration-test</phase>
+                                                            <goals>
+                                                                <goal>uninstall</goal>
+                                                            </goals>
+                                                            <configuration>
+                                                                <releaseName>${project.artifactId}</releaseName>
+                                                                <namespace>${k8s.cluster.namespace}</namespace>
+                                                                <debug>true</debug>
+                                                            </configuration>
+                                                        </execution>
+                            -->
                         </executions>
                     </plugin>
                     <!-- run system tests on installed helm release -->
@@ -701,8 +723,6 @@
                                 </goals>
                                 <phase>integration-test</phase>
                                 <configuration>
-                                    <skip>false</skip>
-                                    <forkCount>0</forkCount>
                                     <includes>
                                         <include>**/*SystemTest.java</include>
                                     </includes>
