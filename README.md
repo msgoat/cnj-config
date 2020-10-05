@@ -4,7 +4,7 @@ Showcase of a "Hello-World" style cloud native Java using Spring Boot, Java EE a
 cloud-native application configuration via environment variables.
 
 ## Status
-![Build status](https://drone.at.automotive.msg.team/api/badges/cloudtrain/cnj-config/status.svg)
+![Build status](https://drone.at41tools.k8s.aws.msgoat.eu/api/badges/msgoat/cnj-config/status.svg)
 
 ## Release information
 

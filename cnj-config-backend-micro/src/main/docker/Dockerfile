@@ -1,4 +1,4 @@
-FROM docker.at.automotive.msg.team/msgoat/at41-docker-jre11:1.1.0
+FROM docker.at41tools.k8s.aws.msgoat.eu/cloudtrain/at41-docker-jre11:2.1.0
 
 LABEL maintainer="michael.theis@msg.group" \
         ${project.groupId}.${project.artifactId}.project="CloudTrain" \
@@ -7,7 +7,7 @@ LABEL maintainer="michael.theis@msg.group" \
 
 ENV JAVA_OPTS="" \
     DOCKER_JAVA_OPTS="" \
-    PAYARA_JAVA_OPTS="-Djava.util.logging.ConsoleHandler.formatter=fish.payara.enterprise.server.logging.JSONLogFormatter" \
+    PAYARA_JAVA_OPTS="" \
     PAYARA_ARGUMENTS="--disablephonehome --enablehealthcheck true --nocluster --nohostaware"
 
 RUN echo "adding run user payara to system" \
