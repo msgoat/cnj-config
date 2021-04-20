@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.0] - 2021-04-20
+### Added
+### Changed
+- moved to new AWS CloudTrain environment without any behavioural changes
+- update to latest runtime versions pending
+
 ## [4.0.0] - 2020-10-05
 ### Added
 - added Quarkus showcase

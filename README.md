@@ -11,7 +11,7 @@ The actual configuration approach is demonstrated with four different Java backe
 * Quarkus (see: [cnj-config-backend-quarkus](cnj-config-backend-quarkus/README.md))
 
 ## Status
-![Build status](https://drone.at41tools.k8s.aws.msgoat.eu/api/badges/msgoat/cnj-config/status.svg)
+![Build status](https://drone.cloudtrain.aws.msgoat.eu/api/badges/msgoat/cnj-config/status.svg)
 
 ## Release information
 

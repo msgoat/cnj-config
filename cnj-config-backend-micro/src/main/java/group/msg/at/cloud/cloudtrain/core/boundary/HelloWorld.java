@@ -1,6 +1,7 @@
 package group.msg.at.cloud.cloudtrain.core.boundary;
 
 import group.msg.at.cloud.cloudtrain.core.entity.Message;
+import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.ejb.Stateless;
@@ -12,6 +13,9 @@ import java.util.UUID;
  */
 @Stateless
 public class HelloWorld {
+
+    @Inject
+    Config config;
 
     @Inject
     @ConfigProperty(name = "cloudtrain.config.stringValue", defaultValue = "???cloudtrain.config.stringValue???")

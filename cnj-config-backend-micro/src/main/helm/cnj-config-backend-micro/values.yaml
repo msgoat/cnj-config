@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: docker.at41tools.k8s.aws.msgoat.eu/cloudtrain/cnj-config-backend-micro
+  repository: docker.cloudtrain.aws.msgoat.eu/cloudtrain/cnj-config-backend-micro
   tag: latest
   pullPolicy: Always
 #  pullSecret: fwp-pull-secret
