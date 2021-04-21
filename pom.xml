@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>group.msg.at.cloud</groupId>
     <artifactId>cnj-config</artifactId>
-    <version>4.0.0</version>
+    <version>5.0.0</version>
     <packaging>pom</packaging>
     <description>Simple cloud native Java application demonstrating cloud native configuration of applications</description>
     <properties>
@@ -25,7 +25,7 @@
         <maven.surefire.plugin.version>2.22.1</maven.surefire.plugin.version>
     </properties>
 	<modules>
-		<module>cnj-config-backend-javaee</module>
+		<module>cnj-config-backend-jakartaee</module>
 		<module>cnj-config-backend-micro</module>
         <module>cnj-config-backend-spring</module>
         <module>cnj-config-backend-quarkus</module>

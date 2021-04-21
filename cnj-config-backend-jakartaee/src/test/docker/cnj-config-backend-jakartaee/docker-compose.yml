@@ -1,0 +1,19 @@
+# docker-compose.yml
+# ----------------------------------------------------------------------------
+# Composes Docker containers and volumes to a runnable Java EE application
+# ----------------------------------------------------------------------------
+#
+---
+version: '3'
+
+services:
+
+  backend:
+    image: docker.cloudtrain.aws.msgoat.eu/cloudtrain/cnj-config-backend-jakartaee:${project.version}
+    ports:
+      - "38080:8080"
+    environment:
+      CLOUDTRAIN_CONFIG_STRINGVALUE: "jakartaee"
+      CLOUDTRAIN_CONFIG_NUMERICVALUE: "456"
+
+

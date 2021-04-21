@@ -12,7 +12,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- runtime related properties -->
         <java.version>11</java.version>
-        <spring.boot.version>2.3.4.RELEASE</spring.boot.version>
+        <spring.boot.version>2.4.4</spring.boot.version>
         <!-- common logging dependencies -->
         <slf4j.version>1.7.30</slf4j.version>
         <logstash.logback.encoder.version>6.1</logstash.logback.encoder.version>
@@ -31,7 +31,7 @@
         <!-- kubernetes related properties -->
         <k8s.cluster.route>https://apps.cloudtrain.aws.msgoat.eu</k8s.cluster.route>
         <k8s.cluster.namespace>default</k8s.cluster.namespace>
-        <k8s.ingress.host></k8s.ingress.host>
+        <k8s.ingress.host>apps.cloudtrain.aws.msgoat.eu</k8s.ingress.host>
         <k8s.ingress.path>/${k8s.cluster.namespace}/${project.artifactId}</k8s.ingress.path>
         <k8s.test.target.route>${k8s.cluster.route}${k8s.ingress.path}</k8s.test.target.route>
         <!-- pinning versions of common maven plugins -->
@@ -54,8 +54,15 @@
         <maven.compose.plugin.version>2.0.0</maven.compose.plugin.version>
         <maven.docker.plugin.version>0.33.0</maven.docker.plugin.version>
         <maven.helm.plugin.version>3.0.0</maven.helm.plugin.version>
+        <!-- quality assurance properties -->
+        <maven.sonar.plugin.version> 3.8.0.2131</maven.sonar.plugin.version>
+        <sonar.host.url>https://sonarqube.cloudtrain.aws.msgoat.eu</sonar.host.url>
+        <!-- <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco*.exec</sonar.coverage.jacoco.xmlReportPaths> -->
+        <maven.jacoco.plugin.version>0.8.6</maven.jacoco.plugin.version>
+        <jacoco.address>localhost</jacoco.address>
+        <jacoco.port>38089</jacoco.port>
         <!-- new Maven version management -->
-        <revision>4.0.0</revision>
+        <revision>5.0.0</revision>
         <sha1></sha1>
         <changelist></changelist>
     </properties>
@@ -199,6 +206,17 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>flatten-maven-plugin</artifactId>
                     <version>${maven.flatten.plugin.version}</version>
+                </plugin>
+                <!-- quality assurance plugins -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${maven.jacoco.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>${maven.sonar.plugin.version}</version>
                 </plugin>
                 <!-- application type specific maven plugins section -->
                 <plugin>
@@ -485,6 +503,33 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <!-- quality assurance plugins -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-jacoco-agent-to-docker-resources</id>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <phase>prepare-package</phase>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.jacoco</groupId>
+                                            <artifactId>org.jacoco.agent</artifactId>
+                                            <version>${maven.jacoco.plugin.version}</version>
+                                            <classifier>runtime</classifier>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <stripClassifier>true</stripClassifier>
+                                    <stripVersion>true</stripVersion>
+                                    <outputDirectory>${project.build.directory}/docker-resources</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -660,6 +705,78 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <!-- quality assurance plugins -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-jacoco-agent-to-docker-resources</id>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <phase>prepare-package</phase>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.jacoco</groupId>
+                                            <artifactId>org.jacoco.agent</artifactId>
+                                            <version>${maven.jacoco.plugin.version}</version>
+                                            <classifier>runtime</classifier>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <stripClassifier>true</stripClassifier>
+                                    <stripVersion>true</stripVersion>
+                                    <outputDirectory>${project.build.directory}/docker-resources</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent-for-unit-tests</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>prepare-agent-for-system-tests</id>
+                                <goals>
+                                    <goal>prepare-agent-integration</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>pull-jacoco-data-from-container</id>
+                                <goals>
+                                    <goal>dump</goal>
+                                </goals>
+                                <phase>integration-test</phase>
+                            </execution>
+                            <execution>
+                                <id>generate-report</id>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <phase>verify</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonarsource.scanner.maven</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>analyze-code</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sonar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -728,6 +845,7 @@
                                     <releaseName>${project.artifactId}</releaseName>
                                     <namespace>${k8s.cluster.namespace}</namespace>
                                     <debug>true</debug>
+                                    <timeout>90s</timeout>
                                 </configuration>
                             </execution>
                             <!--
@@ -786,8 +904,8 @@
     <distributionManagement>
         <repository>
             <id>cloudtrain-maven-repository</id>
-            <name>msg Automotive AT Maven Releases Repository</name>
-            <url>https://nexus.cloudtrain.aws.msgoat.eu/repository/maven-releases/</url>
+            <name>msg Automotive CloudTrain Releases Repository</name>
+            <url>https://nexus.cloudtrain.aws.msgoat.eu/repository/cloudtrain-releases/</url>
         </repository>
     </distributionManagement>
 </project>

@@ -3,10 +3,7 @@ kind: Service
 metadata:
   name: {{ include "cnj-config-backend-micro.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "cnj-config-backend-micro.name" . }}
-    helm.sh/chart: {{ include "cnj-config-backend-micro.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- include "cnj-config-backend-micro.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -15,5 +12,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: {{ include "cnj-config-backend-micro.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "cnj-config-backend-micro.selectorLabels" . | nindent 4 }}
