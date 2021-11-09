@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.0.0] - 2021-11-09
+### Added
+### Changed
+- released version 6.0.0 of all showcases
+- upgraded to the latest versions of runtime environments and servers
+- upgraded to the latest versions of maven plugins
+- switched from javaee dependencies to jakartaee dependencies (except for quarkus)
+- replaced custom health endpoints with standard health endpoints (microprofile, quarkus)
+- removed javaee/jakartaee showcase since it does not differ significantly from the microprofile showcase
+
 ## [5.0.0] - 2021-04-21
 ### Added
 ### Changed
