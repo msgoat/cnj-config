@@ -5,9 +5,8 @@ cloud-native application configuration via environment variables.
 
 The actual configuration approach is demonstrated with four different Java backend technologies:
 
-* Jakarta EE (see: [cnj-config-backend-jakartaee](cnj-config-backend-jakartaee/README.md))
 * Eclipse MicroProfile (see: [cnj-config-backend-micro](cnj-config-backend-micro/README.md))
-* Spring Boot + Spring Data (see: [cnj-config-backend-spring](cnj-config-backend-spring/README.md))
+* Spring Boot (see: [cnj-config-backend-spring](cnj-config-backend-spring/README.md))
 * Quarkus (see: [cnj-config-backend-quarkus](cnj-config-backend-quarkus/README.md))
 
 ## Status

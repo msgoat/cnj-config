@@ -1,6 +1,0 @@
-apiVersion: v2
-name: cnj-config-backend-jakartaee
-description: "${project.description}"
-type: application
-version: 4.0.0
-appVersion: "${project.version}"
