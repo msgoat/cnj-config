@@ -10,7 +10,7 @@ import java.util.UUID;
 @Service
 public class HelloWorld {
 
-    @Value("${cloudtrain.config.stringValue}")
+    @Value("${cloudtrain.config.stringValue:???cloudtrain.config.stringValue???}")
     private String stringConfigValue;
 
     @Value("${cloudtrain.config.numericValue}")
